@@ -1,4 +1,6 @@
 import itertools
+from tests.istatistik import toplam_baglanti_reduce
+from tests.istatistik import toplam_baglanti_reduce
 from uzay_oyunu.akis import fibonacci, rota_sayaci
 
 
@@ -62,3 +64,34 @@ def test_rota_sayaci_onbellek() -> None:
     }
     say = rota_sayaci(baglantilar)
     assert (say("dünya", 3), say("dünya", 10), say("dünya", 40)) == (9, 2185, 16832258606399)
+
+    from uzay_oyunu.istatistik import (
+    baglantisi_cok_filter,
+    baglantisi_cok_kavrama,
+    buyuk_harfli_kavrama,
+    buyuk_harfli_map,
+    hizli_yolculuk,
+    toplam_baglanti_reduce,
+    toplam_baglanti_sum,
+)
+
+
+def test_istatistik_fonksiyonel() -> None:
+    gezegenler = ["dünya", "centauri", "sirius", "orion", "kara_delik"]
+    baglantilar = {
+        "dünya": ["centauri", "sirius"],
+        "centauri": ["dünya", "sirius", "orion"],
+        "sirius": ["dünya", "centauri", "kara_delik"],
+        "orion": ["centauri", "kara_delik"],
+        "kara_delik": ["sirius", "orion"],
+    }
+
+    assert buyuk_harfli_map(gezegenler) == buyuk_harfli_kavrama(gezegenler)
+    assert buyuk_harfli_map(gezegenler) == ["DÜNYA", "CENTAURI", "SIRIUS", "ORION", "KARA_DELIK"]
+
+    assert baglantisi_cok_filter(baglantilar) == baglantisi_cok_kavrama(baglantilar)
+
+    assert toplam_baglanti_reduce(baglantilar) == toplam_baglanti_sum(baglantilar)
+   
+    sonuc = hizli_yolculuk("dünya", "sirius")
+    assert "hız=3" in sonuc
