@@ -1,5 +1,5 @@
 import itertools
-from uzay_oyunu.akis import fibonacci
+from uzay_oyunu.akis import fibonacci, rota_sayaci
 
 
 def test_fibonacci_yontemleri_ve_tuketim() -> None:
@@ -47,3 +47,18 @@ def test_seyir_boru_hatti() -> None:
     kayitlar = ayristir(satirlari_oku(dosya))
     hedefler = [h for _, h, _ in uzun_yolculuklar(kayitlar, 10)]
     assert hedefler == ["sirius", "centauri", "orion", "kara_delik"]
+
+    from uzay_oyunu.akis import rota_sayaci
+
+
+def test_rota_sayaci_onbellek() -> None:
+    
+    baglantilar = {
+        "dünya": ["centauri", "sirius"],
+        "centauri": ["dünya", "sirius", "orion"],
+        "sirius": ["dünya", "centauri", "kara_delik"],
+        "orion": ["centauri", "kara_delik"],
+        "kara_delik": ["sirius", "orion"],
+    }
+    say = rota_sayaci(baglantilar)
+    assert (say("dünya", 3), say("dünya", 10), say("dünya", 40)) == (9, 2185, 16832258606399)

@@ -42,3 +42,18 @@ def uzun_yolculuklar(kayitlar: Iterator[Tuple[str, str, int]], esik: int) -> Ite
     for kayit in kayitlar:
         if kayit[2] > esik:
             yield kayit
+
+            from functools import lru_cache
+from typing import Callable, Dict, List
+
+
+def rota_sayaci(baglantilar: Dict[str, List[str]]) -> Callable[[str, int], int]:
+    
+
+    @lru_cache(maxsize=None)
+    def rota_sayisi(gezegen: str, adim: int) -> int:
+        if adim == 0:
+            return 1
+        return sum(rota_sayisi(komsu, adim - 1) for komsu in baglantilar.get(gezegen, []))
+
+    return rota_sayisi
