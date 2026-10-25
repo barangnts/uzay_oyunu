@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from uzay_oyunu.dekoratorler import log_cagri, sure_olc
+from uzay_oyunu.dekoratorler import log_cagri, sinirla, sure_olc
 
 
 def test_sure_olc_sonuc_ve_meta() -> None:
@@ -104,3 +104,23 @@ def test_komut_fonksiyonlari() -> None:
     assert "yardim" in yardim_sonuc
     assert "envanter" in yardim_sonuc
     assert "harita" in yardim_sonuc
+
+    from uzay_oyunu.dekoratorler import sinirla
+
+
+def test_sinirla_dekoratoru_ve_yakit_harca() -> None:
+
+    @sinirla(0, 100)
+    def yakit_harca(miktar: int) -> int:
+        return 100 - miktar
+
+    assert yakit_harca(30) == 70
+
+    assert yakit_harca(0) == 100
+    assert yakit_harca(100) == 0
+
+    with pytest.raises(ValueError, match="150 değeri 0-100 aralığında değil"):
+        yakit_harca(150)
+
+    with pytest.raises(ValueError, match="-5 değeri 0-100 aralığında değil"):
+        yakit_harca(-5)

@@ -38,3 +38,20 @@ def log_cagri(fonk: Callable) -> Callable:
         return sonuc
 
     return sarmalayici
+
+def sinirla(alt: int, ust: int) -> Callable:
+    def dekorator(fonk: Callable) -> Callable:
+        @functools.wraps(fonk)
+        def sarmalayici(*args: Any, **kwargs: Any) -> Any:
+            if not args:
+                raise ValueError(f"{fonk.__name__}: En az bir konumsal arguman gereklidir.")
+
+            ilk_deger = args[0]
+            if not (alt <= ilk_deger <= ust):
+                raise ValueError(f"{fonk.__name__}: {ilk_deger} değeri {alt}-{ust} aralığında değil")
+
+            return fonk(*args, **kwargs)
+
+        return sarmalayici
+
+    return dekorator
