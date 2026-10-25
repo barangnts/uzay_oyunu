@@ -55,3 +55,31 @@ def sinirla(alt: int, ust: int) -> Callable:
         return sarmalayici
 
     return dekorator
+
+from collections import OrderedDict
+from typing import Optional
+
+
+def hafiza(maxsize: Optional[int] = None) -> Callable:
+    def dekorator(fonk: Callable) -> Callable:
+        onbellek: OrderedDict = OrderedDict()
+
+        @functools.wraps(fonk)
+        def sarmalayici(*args: Any, **kwargs: Any) -> Any:
+            anahtar = (args, tuple(sorted(kwargs.items())))
+
+            if anahtar in onbellek:
+                onbellek.move_to_end(anahtar)
+                return onbellek[anahtar]
+
+            sonuc = fonk(*args, **kwargs)
+            onbellek[anahtar] = sonuc
+
+            if maxsize is not None and len(onbellek) > maxsize:
+                onbellek.popitem(last=False) 
+
+            return sonuc
+
+        return sarmalayici
+
+    return dekorator

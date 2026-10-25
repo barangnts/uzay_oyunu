@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from uzay_oyunu.dekoratorler import log_cagri, sinirla, sure_olc
+from uzay_oyunu.dekoratorler import hafiza, log_cagri, sinirla, sure_olc
 
 
 def test_sure_olc_sonuc_ve_meta() -> None:
@@ -124,3 +124,19 @@ def test_sinirla_dekoratoru_ve_yakit_harca() -> None:
 
     with pytest.raises(ValueError, match="-5 değeri 0-100 aralığında değil"):
         yakit_harca(-5)
+
+        from uzay_oyunu.dekoratorler import hafiza
+
+
+def test_hafiza_bonus_ve_lru_cache_kiyas() -> None:
+
+    @hafiza(maxsize=2)
+    def topla_hafiza(x: int) -> int:
+        return x + 10
+
+    @lru_cache(maxsize=2)
+    def topla_lru(x: int) -> int:
+        return x + 10
+
+    for sayi in [1, 2, 3, 2, 1]:
+        assert topla_hafiza(sayi) == topla_lru(sayi)
