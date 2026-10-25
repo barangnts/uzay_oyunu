@@ -14,3 +14,12 @@ def sure_olc(fonk: Callable) -> Callable:
         return sonuc
 
     return sarmalayici
+
+def say(fonk: Callable) -> Callable:
+    @functools.wraps(fonk)
+    def sarmalayici(*args: Any, **kwargs: Any) -> Any:
+        sarmalayici.cagri += 1
+        return fonk(*args, **kwargs)
+
+    sarmalayici.cagri = 0
+    return sarmalayici
