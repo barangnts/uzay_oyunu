@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from uzay_oyunu.dekoratorler import sure_olc
+from uzay_oyunu.dekoratorler import log_cagri, sure_olc
 
 
 def test_sure_olc_sonuc_ve_meta() -> None:
@@ -49,3 +49,19 @@ def test_say_ve_dekorator_sirasi() -> None:
 
     fib3(20)
     assert fib3.__wrapped__.cagri == 21
+
+    from uzay_oyunu.dekoratorler import log_cagri
+
+
+def test_log_cagri_calisma_ve_sonuc(capsys) -> None:
+
+    @log_cagri
+    def yolculuk(hedef: str, hiz: int = 1) -> str:
+        return f"{hedef} hiz={hiz}"
+
+    sonuc = yolculuk("orion", hiz=3)
+    assert sonuc == "orion hiz=3"
+
+    yakalanan = capsys.readouterr().out
+    assert "-> yolculuk('orion', hiz=3)" in yakalanan
+    assert "<<- yolculuk orion hiz=3" in yakalanan

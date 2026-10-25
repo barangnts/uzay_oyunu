@@ -23,3 +23,18 @@ def say(fonk: Callable) -> Callable:
 
     sarmalayici.cagri = 0
     return sarmalayici
+
+def log_cagri(fonk: Callable) -> Callable:
+    @functools.wraps(fonk)
+    def sarmalayici(*args: Any, **kwargs: Any) -> Any:
+        arg_listesi = [repr(a) for a in args]
+        arg_listesi.extend(f"{k}={repr(v)}" for k, v in kwargs.items())
+        arg_metni = ", ".join(arg_listesi)
+        print(f"-> {fonk.__name__}({arg_metni})")
+
+        sonuc = fonk(*args, **kwargs)
+
+        print(f"<<- {fonk.__name__} {sonuc}")
+        return sonuc
+
+    return sarmalayici
