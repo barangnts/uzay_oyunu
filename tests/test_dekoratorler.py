@@ -65,3 +65,42 @@ def test_log_cagri_calisma_ve_sonuc(capsys) -> None:
     yakalanan = capsys.readouterr().out
     assert "-> yolculuk('orion', hiz=3)" in yakalanan
     assert "<<- yolculuk orion hiz=3" in yakalanan
+
+    import pytest
+from uzay_oyunu.komutlar import (
+    KOMUTLAR,
+    envanter_komutu,
+    harita_komutu,
+    komut,
+    yardim_komutu,
+)
+
+
+def test_komut_kayit_ve_tekrarlanan_hata() -> None:
+    with pytest.raises(ValueError, match="zaten tanimli"):
+        @komut("yardim", "tekrar eden komut")
+        def sahte_komut(durum):
+            pass
+
+
+def test_komut_fonksiyonlari() -> None:
+    ornek_durum = {
+        "konum": "dünya",
+        "baglantilar": {"dünya": ["orion", "sirius", "kara_delik"]},
+        "credits": 250,
+        "engines": 2,
+        "copilot": True,
+    }
+
+    harita_sonuc = harita_komutu(ornek_durum)
+    assert "orion" in harita_sonuc
+    assert "kara_delik" in harita_sonuc
+
+    envanter_sonuc = envanter_komutu(ornek_durum)
+    assert "250" in envanter_sonuc
+    assert "Motor: 2" in envanter_sonuc
+
+    yardim_sonuc = yardim_komutu(ornek_durum)
+    assert "yardim" in yardim_sonuc
+    assert "envanter" in yardim_sonuc
+    assert "harita" in yardim_sonuc
